@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express');
 const mongoConnection = require('./config/db.config');
 
 const app = express();
+app.use(express.json());
 const { nanoid } = require('nanoid')
 
 const URLSchema = require('./models/UrlModel');
@@ -35,11 +37,11 @@ app.post('/shortner', async (req, res, next) => {
     const newurlSchema = new URLSchema({
         longUrl: url,
         urlCode: code,
-        shortUrl: `${baseURL}/code`,
+        shortUrl: `${baseURL}/${code}`,
         date: new Date() 
     });
 
-    await newurlSchema();
+    await newurlSchema.save();
 
     res.json({
         success: true,
